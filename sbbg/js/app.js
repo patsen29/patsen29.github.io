@@ -1,4 +1,4 @@
-const DEBUG_DAT = `*Paste dat file here`;
+const DEBUG_DAT = ``;
 const POS_LABELS = ["--", "P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
 
 Vue.filter('dec3', num => num && num.toFixed(3).replace("0.", "."));
@@ -21,8 +21,8 @@ let app = new Vue({
     },
     template: `<div>
         <div class="no-print">
-            <div><label for="datIn">Dat file goes here:</label></div>
-            <div><textarea id="datIn" cols="120" rows="10" v-model="dat"></textarea></div>
+            <div><label for="datIn">Paste dat file in here:</label></div>
+            <div><textarea id="datIn" cols="120" rows="10" v-model="dat" placeholder="Paste dat here"></textarea></div>
             <div>Lg info: {{lgAvg.year}}{{lgAvg.lg}} 
                 <span class="warning">WARN: League info not available, using generic defaults</span> 
             </div>
