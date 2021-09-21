@@ -1,0 +1,116 @@
+@media print {
+    div.no-print {
+        display: none;
+    }
+}
+
+span.warning {
+    color: red;
+}
+
+div.card-displays {
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+
+div.card-outer {
+    display: inline-block;
+    width: 2.5in;
+    height: 3.5in;
+    /*background-color: lightgrey;*/
+    position: relative;
+    margin-bottom: -.125in;
+}
+
+div.card-inner {
+    left: 0.125in;
+    top: 0.125in;
+    background-color: dimgray;
+    color: white;
+    width: 2.25in;
+    height: 3.25in;
+    border-radius: 0.125in;
+    position: absolute;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 12pt;
+    border: solid medium dimgray;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div.card-name {
+    font-weight: bold;
+    padding-top: .05in;
+}
+div.card-team {
+    font-size: 11pt;
+}
+div.card-chart {
+    background-color: white;
+    color: black;
+    border-radius: .125in;
+    margin: .05in;
+    padding: .025in;
+}
+span.card-chart-cell {
+    width: 33%;
+    text-align: left;
+    display: inline-block;
+    font-size: 14px;
+}
+span.head {
+    font-weight: bold;
+}
+span.result {
+    padding-left: .125rem;
+    font-stretch: semi-condensed;
+    color: black;
+}
+span.ob {
+    color: black;
+}
+div.card-ratings {
+    font-size: 11pt;
+    font-weight: bold;
+}
+div.card-ratings span {
+    font-weight: normal;
+}
+div.card-stats {
+    font-size: 10pt;
+}
+.test {
+    SF: #F2552C;
+    NYM: #FB4F14;
+    DET: #DE4406;
+    BAL: #ED4c09;
+    SD: #473729;
+    HOU: #FF7F00;
+    PIT: #FDB829;
+    TB: #FFD700;
+    OAK: #003831;
+    SEA: #005C5C;
+    MIA: #00a3e0;
+    NYY: #1C2841;
+    MIL: #13294b;
+    MIN: #072754;
+    COL: #333366;
+    LAD: #083C6B;
+    CHC: #003279;
+    TOR: #003DA5;
+    KC: #74B4FA;
+    CLE: #D30335;
+    LAA: #B71234;
+    ATL: #B71234;
+    PHI: #BA0C2F;
+    BOS: #C60C30;
+    STL: #C41E3A;
+    ARI: #A71930;
+    CIN: #C6011F;
+    WAS: #BA122B;
+    TEX: #BD1021;
+    CHW: #C0C0C0;
+}
+
