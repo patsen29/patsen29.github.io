@@ -1,4 +1,35 @@
-const DEBUG_DAT = ``;
+const DEBUG_DAT = `*N       E2019 Washington   AB Hit  2B  3B  HR  BB  SO RBI B ERR SB CS Gam Gam-P Gam-P Gam-P Gam-P
+26    06 Turner, Trea      521 155  37   5  19  43E113  57 R  13 35  5 122 122-6
+30    09 Eaton, Adam       566 158  25   7  15  65D106  49 L   6 15  3 151 139-9 007-7
+29    05 Rendon, Anthony   545 174  44   3  34  80D 86 126 R  11  5  1 146 146-5 001-4
+20    07 Soto, Juan        542 153  32   5  34 108G132 110 L   2 12  1 150 150-7
+35    03 Kendrick, Howie   334 115  23   1  17  27D 49  62 R   2  2  1 121 048-3 023-4 015-5 007-D
+32    04 Dozier, Brian     416  99  20   0  20  61E105  50 R   5  3  4 135 123-4
+22    08 Robles, Victor    546 139  33   3  17  35A140  65 R   6 28  9 155 141-8 015-9
+31    02 Gomes, Yan        314  70  16   0  12  38D 84  43 R   4  2  0  97 093-2 001-3
+00    01
+*Pitchers                  Inn Hit          HR  BB  SO ERA T   W  L  S Gam  St     AB Hit HR  BB  SO
+29    01 Corbin, Patrick   202 169          24  70 238 325 L  14  7  0  33  33  D  65   6  0   3  27
+30    01 Strasburg, Stephen209 161          24  56 251 332 R  18  6  0  33  33  C  72  12  1   3  25
+35    01 Sanchez, Anibal   166 153          22  58 134 385 R  11  8  0  30  30  D  52   6  0   0  24
+34    01 Scherzer, Max     172 144          18  33 243 292 R  11  7  0  27  27  C  55  10  0   0  27
+26    01 Fedde, Erick       78  81          11  33  41 450 R   4  2  0  21  12  C
+32    01 Doolittle, Sean    60  63          11  15  66 405 L   6  5 29  63   0  D
+27    01 Suero, Wander      71  64           5  26  81 454 R   6  9  1  78   0  D
+30    01 Grace, Matt        47  61          11  10  35 636 L   1  2  0  51   1  D
+26    01 Rainey, Tanner     48  32           6  38  74 391 R   2  3  0  52   0  D
+33    01 Guerra, Javy       54  55           9  12  42 486 R   3  1  1  40   0  D
+42    01 Rodney, Fernando   33  29           3  16  35 405 R   0  3  2  38   0  D
+26    01 Ross, Joe          64  74           7  33  57 548 R   4  4  0  27   9  D  19   2  0   1  10
+27    01 Voth, Austin       44  33           5  13  44 330 R   2  1  0   9   8  D
+*Bench                      AB Hit  2B  3B  HR  BB  SO RBI B ERR SB CS Gam Gam-P Gam-P Gam-P Gam-P
+30    03 Adams, Matt       310  70  14   0  20  20E115  56 L   5  0  0 111 079-3
+35    02 Suzuki, Kurt      280  74  11   0  17  20B 36  63 R   3  0  1  85 075-2
+32    09 Parra, Gerardo    188  47  11   1   8  11C 41  42 L   1  6  2  89 023-9 014-3 012-8 004-7
+34    03 Zimmerman, Ryan   171  44   9   0   6  17I 39  27 R   3  0  0  52 044-3 003-D
+33    04 Cabrera, Asdrubal 124  40  10   1   6  19I 18  40 B   0  0  0  38 031-4 005-5 003-3
+27    06 Difo, Wilmer      131  33   2   0   2  12I 29   8 B   2  0  1  43 033-6 006-5 002-4
+*COL=red`;
 const POS_LABELS = ["--", "P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
 
 Vue.filter('dec3', num => num && num.toFixed(3).replace("0.", "."));
@@ -9,6 +40,8 @@ let app = new Vue({
         return {
             dat: DEBUG_DAT,
             lgAvg: {
+                edit: false,
+                list: [],
                 year: 0,
                 lg: 'Any',
                 raw: {inn: 31182, ab: 119293, h: 31239, db: 5551, tr: 884, hr: 2906, bb: 11469, so: 19090, tmG: 162},
