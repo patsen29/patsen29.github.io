@@ -1,3 +1,4 @@
+const NBSP = "\u00A0";
 const DEBUG_DAT = `*N       E2019 Washington   AB Hit  2B  3B  HR  BB  SO RBI B ERR SB CS Gam Gam-P Gam-P Gam-P Gam-P
 26    06 Turner, Trea      521 155  37   5  19  43E113  57 R  13 35  5 122 122-6
 30    09 Eaton, Adam       566 158  25   7  15  65D106  49 L   6 15  3 151 139-9 007-7
@@ -475,8 +476,8 @@ function makeHitter(line, lgAvg, teamName, isDef) {
     let err = getErrorRate(e, inn);
     let name = splitName(line.substring(9, 27));
     return {
-        first: name[0],
-        last: name[1],
+        first: name[0] || NBSP,
+        last: name[1] || NBSP,
         year: lgAvg.year,
         lg: lgAvg.lg,
         team: teamName,
@@ -536,11 +537,11 @@ function makePitcher(line, lgAvg, teamName) {
     let end = Math.round(stats.ip / stats.g) + 1;
     let hit = line[80] || (end > 3 ? "C" : "D"); // TODO: Parse hitting stats later?
     return {
-        first: name[0],
-        last: name[1],
+        first: name[0] || NBSP,
+        last: name[1] || NBSP,
         year: lgAvg.year,
         lg: lgAvg.lg,
-        team: teamName,
+        team: teamName || NBSP,
         type: "P",
         pos: pos,
         end: end,
@@ -634,7 +635,7 @@ function capAndScale(raw, scale) {
 
 function splitName(name) {
     let tokens = name.split(",");
-    return [tokens[1].trim(), tokens[0].trim()];
+    return [tokens[1] && tokens[1].trim(), tokens[0].trim()];
 }
 
 function convertChart(chart, addErrors) {
