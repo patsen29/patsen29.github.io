@@ -4,7 +4,7 @@ Vue.component('card-image', {
     },
     template: `<div class="card-outer">
         <div class="card-inner">
-            <div class="card-name">{{card.first}} {{card.last.toUpperCase()}}</div>
+            <div class="card-name">{{card.first}} <span class="last">{{card.last}}</span></div>
             <div class="card-team">{{card.year}}{{card.lg}} {{card.team}}</div>
             <div class="card-chart">
                 <div v-for="row in toChart">
@@ -14,7 +14,7 @@ Vue.component('card-image', {
                     </span>                
                 </div>
             </div>
-            <div class="card-chart">
+            <div class="card-stats">
                 <div v-if="card.type==='B'" class="card-ratings">
                     <b>Spd:</b> <span>{{card.spd}}</span>, 
                     <b>Def:</b> <span>{{card.def}}</span>, 
@@ -29,10 +29,13 @@ Vue.component('card-image', {
                     <span v-else>{{card.stats.rbi}} RBI</span>
                 </div>
                 <div class="card-stats" v-if="card.type==='P'">
-                    {{card.stats.ip}} IP, {{card.stats.era.toFixed(2)}} ERA, 
-                    <span v-if="card.stats.sv * 10 > card.stats.so">{{card.stats.sv}} Sv</span>
-                    <span v-else-if="card.stats.w * 15 > card.stats.so">{{card.stats.w}}-{{card.stats.l}}</span>
-                    <span v-else>{{card.stats.so}} SO</span>
+                    {{card.stats.ip}} IP,  
+                    <span v-if="card.stats.sv * 10 > card.stats.so">
+                        {{card.stats.era.toFixed(2)}} ERA, {{card.stats.sv}} Sv</span>
+                    <span v-else-if="card.stats.w * 15 > card.stats.so">
+                        {{card.stats.w}}-{{card.stats.l}}, {{card.stats.era.toFixed(2)}} ERA</span>
+                    <span v-else>
+                        {{card.stats.era.toFixed(2)}} ERA, {{card.stats.so}} SO</span>
                 </div>
             </div>
         </div>
