@@ -337,9 +337,6 @@ let app = new Vue({
         <div class="no-print">
             <div><label for="datIn">Paste dat file in here:</label></div>
             <div><textarea id="datIn" cols="120" rows="10" v-model="dat" placeholder="Paste dat here"></textarea></div>
-            <div>Lg info: {{lgAvg.year}}{{lgAvg.lg}} 
-                <span class="warning">WARN: League info not available, using generic defaults</span> 
-            </div>
             <div>
                 <button @click="makeCards()">Run</button>
                 <button @click="clear">Clear</button>
