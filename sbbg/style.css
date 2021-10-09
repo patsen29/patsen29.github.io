@@ -40,6 +40,10 @@ div.card-outer {
     margin-bottom: 0.0in;
 }
 
+div.slim {
+    font-stretch: semi-condensed;
+}
+
 div.card-inner {
     left: 0.10in;
     top: 0.10in;
@@ -81,7 +85,7 @@ span.head {
     font-weight: bold;
 }
 span.result {
-    padding-left: 0rem;
+    padding-left: 0;
     font-stretch: semi-condensed;
     color: red;
 }

@@ -34,6 +34,8 @@ const DEBUG_DAT = `*N       E2019 Washington   AB Hit  2B  3B  HR  BB  SO RBI B 
 const POS_LABELS = ["--", "P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
 const LG_GENERIC = "generic  | 31182| 31239|  5551|   884|  2906| 11469| 19090|      |119293|   162|";
 const LG_AVG = `*Yr Lg   |  Inn |  Hits|    2B|    3B|    HR|    BB|    SO|in Lg.|    AB| teamG|
+2021AL   | 21349| 20036|  3956|   316|  3043|  7741| 20983|    15| 81337|   162|
+2021NL   | 21263| 19445|  3907|   354|  2901|  8053| 21162|    15| 80604|   162|
 2020AL   |  7779|  7266|  1421|   115|  1160|  3024|  7776|    15| 29631|    60|
 2020NL   |  7689|  7173|  1402|   126|  1144|  3068|  7810|    15| 29399|    60|
 2019AL   | 21691| 21310|  4318|   385|  3490|  7921| 21241|    15| 83557|   162|
@@ -498,7 +500,8 @@ function makeHitter(line, lgAvg, teamName, isDef) {
         stats: stats,
         chart: convertChart(capped, false),
         flags: {
-            generic: lgAvg.generic
+            generic: lgAvg.generic,
+            slim: line[8] === "|"
         }
     };
 }
@@ -559,7 +562,8 @@ function makePitcher(line, lgAvg, teamName) {
         stats: stats,
         chart: convertChart(capped, true),
         flags: {
-            generic: lgAvg.generic
+            generic: lgAvg.generic,
+            slim: line[8] === "|"
         }
     };
 }
@@ -635,7 +639,11 @@ function capAndScale(raw, scale) {
 
 function splitName(name) {
     let tokens = name.split(",");
-    return [tokens[1] && tokens[1].trim(), tokens[0].trim()];
+    let last = tokens[0].trim();
+    if (last.endsWith("Jr")) last += ".";
+    let first = tokens[1] && tokens[1].trim();
+    if (first.substring(1, 3) === ". ") first = first.substring(0, 2) + first.substring(3);
+    return [first, last];
 }
 
 function convertChart(chart, addErrors) {

@@ -4,7 +4,7 @@ Vue.component('card-image', {
     },
     template: `<div class="card-outer">
         <div class="card-inner">
-            <div class="card-name">{{card.first}} <span class="last">{{card.last}}</span></div>
+            <div class="card-name" v-bind:class="{slim: card.flags.slim}">{{card.first}} <span class="last">{{card.last}}</span></div>
             <div class="card-team">{{card.year}}{{card.lg}} {{card.team}}</div>
             <div class="card-chart">
                 <div v-for="row in toChart">
