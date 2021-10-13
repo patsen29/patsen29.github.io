@@ -1,0 +1,47 @@
+div.flex {
+    display: flex;
+    color: black;
+    background-color: white;
+    border-radius: 10px;
+    padding: 2px;
+}
+
+div.team-card {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 4px;
+    background-color: lightgrey;
+}
+
+div.team-header {
+    text-align: center;
+    font-weight: bold;
+}
+
+th.header {
+    text-align: left;
+}
+
+td.pos {
+    text-align: center;
+    font-weight: bold;
+    width: 3ch;
+}
+
+td.name {
+    text-align: left;
+    width: 11ch;
+}
+
+td.mod {
+    text-align: center;
+    width: 4ch;
+}
+
+tr.hover:hover {
+    background-color: lightgrey;
+}
+
+span.win {
+    font-weight: bold;
+}
