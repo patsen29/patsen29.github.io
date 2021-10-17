@@ -323,9 +323,7 @@ let app = new Vue({
         
         <p v-if="state === 1"><button @click="setupGame()">Start game</button></p>
         <div v-if="state === 2">
-            <p v-if="result">{{result.rolls[0].dice}} {{result.teams[0].id}} {{result.scores[0]}} ({{result.rolls[0].label}}: {{result.rolls[0].player.name}} {{result.rolls[0].player.mod}})</p>
-            <p v-if="result">{{result.rolls[1].dice}} {{result.teams[1].id}} {{result.scores[1]}} ({{result.rolls[1].label}}: {{result.rolls[1].player.name}} {{result.rolls[1].player.mod}})</p>
-            <p v-if="result">{{result.inn}} innings</p>
+            <game-result v-if="result" v-bind:result="result"></game-result>
             <p>
                 <button v-bind:disabled="result" @click="playGame()">Play game</button>
                 <button v-bind:disabled="!result" @click="nextGame()">Next game</button>
@@ -338,12 +336,7 @@ let app = new Vue({
             <h3>Game log</h3>
             <ul>
                 <li v-for="g in log">
-                    <span v-bind:class="{win: g.scores[0] > g.scores[1]}">
-                        {{g.teams[0].city}} {{g.scores[0]}}</span>, 
-                    <span v-bind:class="{win: g.scores[1] > g.scores[0]}">
-                        {{g.teams[1].city}} {{g.scores[1]}}
-                    </span>
-                    <span v-if="g.inn != 9">({{g.inn}} inn)</span>
+                    <quick-result v-bind:game="g"></quick-result>
                 </li>
             </ul>
             <p>
