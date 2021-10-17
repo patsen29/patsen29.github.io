@@ -237,20 +237,54 @@ const TEAMS = [
             {name:"Fairbanks", sta:1, mod:2},
             //{name:"Fleming", sta:4, mod:4},
         ]
+    },
+    {
+        year: 2021, id: "TOR", city: "Toronto", nick: "Blue Jays",
+        hitters: [
+            {name:"Springer", pos:"CF", mod:6},
+            {name:"Semien", pos:"2B", mod:10},
+            {name:"Guerrero Jr.", pos:"1B", mod:10},
+            {name:"Bichette", pos:"SS", mod:9},
+            {name:"Hernandez", pos:"RF", mod:6},
+            {name:"Grichuk", pos:"OF", mod:-2},
+            {name:"Gurriel Jr.", pos:"LF", mod:3},
+            {name:"Espinal", pos:"3B", mod:8},
+            {name:"Jansen", pos:"C", mod:2},
+            {name:"Biggio", pos:"3B", mod:-2},
+            {name:"McGuire", pos:"C", mod:-3},
+            {name:"Kirk", pos:"C", mod:-1},
+            {name:"Tellez", pos:"1B", mod:-8},
+        ],
+        pitchers: [
+            {name:"Ray", sta:6, mod:-3},
+            {name:"Manoah", sta:6, mod:-2},
+            {name:"Berrios", sta:6, mod:-1},
+            {name:"Matz", sta:5, mod:0},
+            {name:"Ryu", sta:5, mod:1},
+            {name:"Romano", sta:1, mod:-3},
+            {name:"Cimber", sta:1, mod:-3},
+            {name:"Mayza", sta:1, mod:-1},
+            {name:"Richards", sta:1, mod:-1},
+            {name:"Stripling", sta:4, mod:1},
+            {name:"Kay", sta:3, mod:3},
+            {name:"Thornton", sta:1, mod:4},
+            {name:"Dolis", sta:1, mod:4},
+        ]
     }
 ];
 
 let app = new Vue({
     el: "#app",
     data: function () {
+        let home = rollDice(TEAMS.length - 1);
+        let away = rollDice(TEAMS.length - 2);
+        if (home === away) away = TEAMS.length - 1;
         return {
             state: 1,
             allTeams: TEAMS,
             dropdownTeam: null,
-            game: {
-                away: TEAMS[2],
-                home: TEAMS[1]
-            },
+            game: [away, home],
+            pitchers: [0, 0],
             result: null,
             log: []
         };
@@ -261,25 +295,37 @@ let app = new Vue({
                 <select v-model="dropdownTeam">
                     <option v-for="(team, index) in TEAMS" v-bind:value="index">{{team.city}}</option>
                 </select>
-                <button @click="setTeam('away')">Away</button> 
-                <button @click="setTeam('home')">Home</button>
+                <button @click="setTeam(0)">Away</button> 
+                <button @click="setTeam(1)">Home</button>
             </p>
-            <p><button @click="selectTeams()">Select teams</button></p>
         </div>
         
-        <div>
+        <div id="team-cards">
             <table>
                 <tr>
-                    <td><team-card v-bind:team="game.away"></team-card></td>
-                    <td><team-card v-bind:team="game.home"></team-card></td>
+                    <td><team-card v-bind:team="allTeams[game[0]]"></team-card></td>
+                    <td><team-card v-bind:team="allTeams[game[1]]"></team-card></td>
+                </tr>
+                <tr>
+                    <td>Pitcher: <select v-model="pitchers[0]">
+                        <option v-for="(player, index) in allTeams[game[0]].pitchers" v-bind:value="index" v-if="player.sta > 2">
+                            {{index < 5 ? (1+index)+"." : ""}} {{player.name}} (S{{player.sta}})
+                        </option>
+                    </select></td>
+                    <td>Pitcher: <select v-model="pitchers[1]">
+                        <option v-for="(player, index) in allTeams[game[1]].pitchers" v-bind:value="index" v-if="player.sta > 2">
+                            {{index < 5 ? (1+index)+"." : ""}} {{player.name}} (S{{player.sta}})
+                        </option>
+                    </select></td>
                 </tr>
             </table>        
         </div>
         
+        <p v-if="state === 1"><button @click="setupGame()">Start game</button></p>
         <div v-if="state === 2">
-            <p>Game view</p>
-            <p>Team cards here</p>
-            <p>{{result}}</p>
+            <p v-if="result">{{result.rolls[0].dice}} {{result.teams[0].id}} {{result.scores[0]}} ({{result.rolls[0].label}}: {{result.rolls[0].player.name}} {{result.rolls[0].player.mod}})</p>
+            <p v-if="result">{{result.rolls[1].dice}} {{result.teams[1].id}} {{result.scores[1]}} ({{result.rolls[1].label}}: {{result.rolls[1].player.name}} {{result.rolls[1].player.mod}})</p>
+            <p v-if="result">{{result.inn}} innings</p>
             <p>
                 <button v-bind:disabled="result" @click="playGame()">Play game</button>
                 <button v-bind:disabled="!result" @click="nextGame()">Next game</button>
@@ -293,9 +339,9 @@ let app = new Vue({
             <ul>
                 <li v-for="g in log">
                     <span v-bind:class="{win: g.scores[0] > g.scores[1]}">
-                        {{g.away}} {{g.scores[0]}}</span>, 
+                        {{g.teams[0].city}} {{g.scores[0]}}</span>, 
                     <span v-bind:class="{win: g.scores[1] > g.scores[0]}">
-                        {{g.home}} {{g.scores[1]}}
+                        {{g.teams[1].city}} {{g.scores[1]}}
                     </span>
                     <span v-if="g.inn != 9">({{g.inn}} inn)</span>
                 </li>
@@ -307,25 +353,27 @@ let app = new Vue({
     </div>`,
     methods: {
         setTeam: function(slot) {
-            console.log(typeof this.dropdownTeam);
-            console.log(TEAMS[this.dropdownTeam]);
-            this.game[slot] = TEAMS[+this.dropdownTeam];
+            let teams = [this.game[0], this.game[1]];
+            teams[slot] = +this.dropdownTeam;
+            this.pitchers[slot] = 0;
+            this.game = teams;
         },
-        selectTeams: function() {
+        setupGame: function() {
             this.state = 2;
         },
         playGame: function() {
-            this.result = playGame(this.game.away, this.game.home);
+            this.result = playGame([this.allTeams[this.game[0]], this.allTeams[this.game[1]]], this.pitchers);
         },
         nextGame: function() {
             if (this.result) { this.log.push(this.result); }
             this.result = null;
+            this.pitchers[0] = (this.pitchers[0] + 1) % 5;
+            this.pitchers[1] = (this.pitchers[1] + 1) % 5;
         },
         clearLog: function() {this.log = []},
         flipTeams: function() {
-            let tmp = this.game.away;
-            this.game.away = this.game.home;
-            this.game.home = tmp;
+            this.game = [this.game[1], this.game[0]];
+            this.pitchers = [this.pitchers[1], this.pitchers[0]];
         },
         editTeams: function() {
             this.state = 1;
@@ -335,24 +383,60 @@ let app = new Vue({
     filters: {}
 });
 
-function playGame(away, home) {
-    let scores = [1 + rolld6(), 1 + rolld6()];
+function playGame(teams, pitchers) {
+    //let scores = [1 + rollDice(), 1 + rollDice()];
     let inn = 9;
+    let rolls = [];
+    for (let i = 0; i < 2; i++) {
+        let dice = [rollDice(), rollDice(), rollDice()];
+        let key = 10*dice[0] + dice[1];
+        let playerMap = findPlayer(key, teams[i], teams[1-i], pitchers[1-i]);
+        rolls[i] = {
+            dice: dice,
+            label: playerMap.label,
+            player: playerMap.player,
+            score: Math.max(0, dice[2] + playerMap.player.mod)
+        };
+    }
+    let scores = [rolls[0].score, rolls[1].score];
     if (scores[0] === scores[1]) {
-        let extraInningRoll = rolld6();
+        let extraInningRoll = rollDice();
         inn = 10 + extraInningRoll % 2;
         if (extraInningRoll > 3) scores[1]++; else scores[0]++;
     }
-    let game = {
-        away: away.id,
-        home: home.id,
+    return {
+        teams: [teams[0], teams[1]],
         scores: scores,
-        inn: inn
-    };
-    game.summary = `${away.id} ${scores[0]}, ${home.id} ${scores[1]}`;
-    return game
+        inn: inn,
+        rolls: rolls
+    }
 }
 
-function rolld6() {
-    return Math.floor(Math.random()*6) + 1
+function findPlayer(key, oTeam, dTeam, rotSlot) {
+    let starter = dTeam.pitchers[rotSlot];
+    let sta = starter.sta;
+    let res;
+    if (key <= 12) res = {label: "Lineup 1", player: oTeam.hitters[0]};
+    else if (key <= 14) res = {label: "Lineup 2", player: oTeam.hitters[1]};
+    else if (key <= 16) res = {label: "Lineup 3", player: oTeam.hitters[2]};
+    else if (key <= 22) res = {label: "Lineup 4", player: oTeam.hitters[3]};
+    else if (key <= 24) res = {label: "Lineup 5", player: oTeam.hitters[4]};
+    else if (key <= 26) res = {label: "Lineup 6", player: oTeam.hitters[5]};
+    else if (key <= 32) res = {label: "Lineup 7", player: oTeam.hitters[6]};
+    else if (key <= 34) res = {label: "Lineup 8", player: oTeam.hitters[7]};
+    else if (key <= 35) res = {label: "Lineup 9", player: oTeam.hitters[8]};
+    else if (key <= 36) res = {label: "Lin 9/Bench", player: oTeam.hitters[9]};
+    else if (key <= 54) res = {label: "Starter", player: starter};
+    else if (key === 55) res = {label: "6th inn", player: (sta < 6) ? dTeam.pitchers[11] : starter};
+    else if (key === 56) res = {label: "6th inn", player: (sta < 6) ? dTeam.pitchers[10] : starter};
+    else if (key === 61) res = {label: "7th inn", player: (sta < 7) ? dTeam.pitchers[9] : starter};
+    else if (key === 62) res = {label: "7th inn", player: (sta < 7) ? dTeam.pitchers[8] : starter};
+    else if (key === 63) res = {label: "8th inn", player: (sta < 8) ? dTeam.pitchers[7] : starter};
+    else if (key === 64) res = {label: "8th inn", player: (sta < 8) ? dTeam.pitchers[6] : starter};
+    else res = {label: "Closer", player: (sta < 9) ? dTeam.pitchers[5] : starter};
+    return res;
+}
+
+function rollDice(num) {
+    return Math.floor(Math.random()*(num || 6)) + 1
 }
