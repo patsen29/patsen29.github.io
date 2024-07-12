@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice analysis tools</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>Dice checker</h2>
+    <p><label>Number of dice:
+        <input type="text" v-model="input.numDice" size="4"></label></p>
+    <p><label>Roll bonus range:
+        <input type="text" v-model="input.rollBonus" size="6"></label></p>
+    <p><label>Breakthrough cutoff:
+        <input type="text" v-model="input.breakTarget" size="4"></label></p>
+    <p>
+        <button @click="processInput">Process</button>
+        <button @click="clear">Clear</button>
+    </p>
+    <hr>
+    <p>Results: {{ output.text }}</p>
+    <table v-if="output.table.length > 0" border="1">
+        <tr>
+            <th>Bonus</th>
+            <th>Base</th>
+            <th>Break%</th>
+        </tr>
+        <tr v-for="row in output.table">
+            <td>{{row.bonus}}</td>
+            <td>{{row.base.toFixed(2)}}</td>
+            <td>{{row.break.toFixed(2)}}%</td>
+        </tr>
+    </table>
+</div>
+
+<script src="mddice.js"></script>
+</body>
+</html>
